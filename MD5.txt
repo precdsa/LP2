@@ -1,0 +1,24 @@
+//Title-Calculate the message digest of a text using the MD5 algorithm in JAVA.
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+public class MD5Example {
+ public static void main(String[] args) throws NoSuchAlgorithmException {
+ // The text to be hashed
+ String message = "It's me Assim Inamdar!.";
+ // Create a MessageDigest object with the MD5 algorithm
+ MessageDigest md = MessageDigest.getInstance("MD5");
+ // Convert the message to a byte array
+ byte[] messageBytes = message.getBytes();
+ // Compute the hash value of the message
+ byte[] digest = md.digest(messageBytes);
+ // Convert the digest to a hexadecimal string
+ StringBuilder sb = new StringBuilder();
+ for (byte b : digest) {
+ sb.append(String.format("%02x", b));
+ }
+ String digestHex = sb.toString();
+ // Print the message and the hash value to the console
+ System.out.println("Message: " + message);
+ System.out.println("Hash value: " + digestHex);
+ }
+}

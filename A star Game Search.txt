@@ -1,0 +1,73 @@
+import heapq
+
+class GameState:
+    def __init__(self, state, parent=None, action=None, cost=0, heuristic=0):
+        self.state = state
+        self.parent = parent
+        self.action = action
+        self.cost = cost
+        self.heuristic = heuristic
+
+    @property
+    def score(self):
+        return self.cost + self.heuristic
+
+    def __lt__(self, other):
+        return self.score < other.score
+
+def astar_search(initial_state, goal_state, heuristic_func):
+    frontier = []
+    heapq.heappush(frontier, initial_state)
+
+    explored = set()
+
+    while frontier:
+        current_state = heapq.heappop(frontier)
+
+        if current_state.state == goal_state:
+            return get_path(current_state)
+
+        explored.add(current_state.state)
+
+        for next_state, action, cost in get_successors(current_state.state):
+            if next_state not in explored:
+                heuristic = heuristic_func(next_state, goal_state)
+                new_cost = current_state.cost + cost
+                new_state = GameState(next_state, current_state, action, new_cost, heuristic)
+                heapq.heappush(frontier, new_state)
+
+    return None
+
+def get_path(state):
+    path = []
+    while state:
+        path.append((state.action, state.state))
+        state = state.parent
+    return list(reversed(path))
+
+# Example usage
+
+def heuristic(state, goal_state):
+    # Custom heuristic function to estimate the cost from state to goal_state
+    # Return an integer value representing the estimated cost
+    return abs(state - goal_state)  # Simple heuristic: absolute difference between the current state and the goal state
+
+def get_successors(state):
+    # Custom function to generate successor states for a given state
+    # Return a list of tuples (next_state, action, cost)
+    successors = []
+    successors.append((state + 1, '+1', 1))  # Add 1 to the current state with a cost of 1
+    successors.append((state - 1, '-1', 1))  # Subtract 1 from the current state with a cost of 1
+    successors.append((state + 2, '+2', 2))  # Add 2 to the current state with a cost of 2
+    successors.append((state - 2, '-2', 2))  # Subtract 2 from the current state with a cost of 2
+    return successors
+
+initial_state = GameState(5)  # Starting state: 5
+goal_state = 10  # Goal state: 10
+
+path = astar_search(initial_state, goal_state, heuristic)
+if path:
+    for action, state in path:
+        print(f"Action: {action}, State: {state}")
+else:
+    print("No solution found.")

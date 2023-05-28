@@ -1,0 +1,31 @@
+#5 Title: Develop an elementary chatbot for any suitable customer interaction application
+
+import random
+
+# Define some responses for the chatbot
+
+responses = {
+    "hello":["Hi there!!","Hello!","Hey!"],
+    "how are you":[" I am doing well","thanks for asking.","I'm fine, thanks!"],
+    "bye":["bye!"],
+    "what happend":["fine"]
+}
+
+# Define a function to handle user input
+
+def handle_input(user_input):
+    for key in responses:
+        if user_input.lower() == key:
+            return random.choice(responses[key])
+        # return "I'm sorry, I don't understand."
+    
+# Main loop for the chatbot
+while True:
+  user_input=input("You:")
+  if user_input.lower() =="quit":
+      break
+  response = handle_input(user_input)
+  print("Bot:",response)
+
+
+

@@ -1,0 +1,46 @@
+#To implement RSA Algorithm
+import random
+def generate_keypair(p, q):
+ n = p * q
+ phi = (p - 1) * (q - 1)
+ # Choose e such that 1 < e < phi and gcd(e, phi) = 1
+ e = random.randrange(1, phi)
+ while gcd(e, phi) != 1:
+ e = random.randrange(1, phi)
+ # Calculate d, the modular inverse of e mod phi
+ d = mod_inverse(e, phi)
+ # Return public and private keypair
+ # Public key: (e, n)
+ # Private key: (d, n)
+ return ((e, n), (d, n))
+def gcd(a, b):
+ while b != 0:
+ a, b = b, a % b
+ return a
+def mod_inverse(a, m):
+ if gcd(a, m) != 1:
+ return None
+ u1, u2, u3 = 1, 0, a
+ v1, v2, v3 = 0, 1, m
+ while v3 != 0:
+ q = u3 // v3
+ v1, v2, v3, u1, u2, u3 = (u1 - q * v1), (u2 - q * v2), (u3 - q * v3), v1, v2, v3
+ return u1 % m
+def encrypt(public_key, plaintext):
+ e, n = public_key
+ cipher = [(ord(char) ** e) % n for char in plaintext]
+ return cipher
+def decrypt(private_key, ciphertext):
+ d, n = private_key
+ plain = [chr((char ** d) % n) for char in ciphertext]
+ return ''.join(plain)
+# Example usage
+p = 61
+q = 53
+public_key, private_key = generate_keypair(p, q)
+message = "Hello, Assim!"
+encrypted_message = encrypt(public_key, message)
+decrypted_message = decrypt(private_key, encrypted_message)
+print("Original message:", message)
+print("Encrypted message:", encrypted_message)
+print("Decrypted message:", decrypted_message)
